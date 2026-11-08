@@ -67,7 +67,7 @@ function Shell() {
       </div>
 
       {/* App frame */}
-      <div className="relative flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-[#f2f2f7] md:h-[min(900px,94dvh)] md:rounded-[30px] md:border md:border-white/15 md:shadow-[0_30px_90px_rgba(0,0,0,0.6)]">
+      <div className="relative flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-[#b98b5e] md:h-[min(900px,94dvh)] md:rounded-[30px] md:border md:border-white/15 md:shadow-[0_30px_90px_rgba(0,0,0,0.6)]">
         {isReader ? (
           <div className="h-full">{renderScreen(s.screen, s.tab)}</div>
         ) : (

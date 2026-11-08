@@ -22,7 +22,7 @@ export function HomeScreen() {
 
       {/* Greeting */}
       <div className="px-4 pt-3.5">
-        <div className="text-[12px] text-ink-400">{greet}</div>
+        <div className="text-[12px] text-ink-900/70">{greet}</div>
         <h1 className="mt-0.5 text-[19px] font-bold leading-[1.7] text-ink-900">
           {s.user ? `សួស្តី ${s.user.name}! តោះអានថ្ងៃនេះ 📚` : "តោះចាប់ផ្តើមអានថ្ងៃនេះ 📚"}
         </h1>
