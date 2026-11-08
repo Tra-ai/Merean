@@ -221,9 +221,6 @@ export function HeroCarousel() {
     >
       <span className="animate-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/35 to-transparent" />
       <div className="relative flex h-full items-center gap-3 p-4">
-        <div className="animate-pulse-soft grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-white/15 ring-1 ring-white/30">
-          <Icon name="bus" className="h-8 w-8 text-white" strokeWidth={1.8} />
-        </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 text-[10px] font-bold tracking-[0.14em] text-white/85">
             TRA <span className="text-[12px]">×</span> redBus
@@ -239,11 +236,10 @@ export function HeroCarousel() {
     </button>,
     // Bac II Plus
     <button key="exam" onClick={() => switchTab("exam")} className="relative block h-full w-full overflow-hidden rounded-2xl text-left" style={{ background: "linear-gradient(115deg, #b34a0e 0%, #ff6b00 55%, #ff9a4d 100%)" }}>
-      <img src={IMG.heroStudy} alt="" className="absolute inset-y-0 right-0 h-full w-[58%] object-cover [mask-image:linear-gradient(to_left,black_55%,transparent)]" />
       <span className="animate-shine pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-white/25 to-transparent" />
       <div className="relative flex h-full flex-col justify-center p-4">
         <span className="w-fit rounded-full bg-white/20 px-2 py-0.5 text-[9.5px] font-bold tracking-wider text-white ring-1 ring-white/30">បាក់ឌុប Plus 🎓</span>
-        <div className="mt-1.5 max-w-[62%] text-[16px] font-bold leading-[1.65] text-white">វិញ្ញាសាប្រឡងចាស់ៗ ២០២៣–២០២៥</div>
+        <div className="mt-1.5 text-[16px] font-bold leading-[1.65] text-white">វិញ្ញាសាប្រឡងចាស់ៗ ២០២៣–២០២៥</div>
         <div className="mt-1 text-[10.5px] text-white/85">៨ មុខវិជ្ជា · ចម្លើយលម្អិតជាភាសាខ្មែរ</div>
       </div>
     </button>,
@@ -252,11 +248,6 @@ export function HeroCarousel() {
       <span className="pointer-events-none absolute -right-8 -top-10 h-40 w-40 rounded-full bg-TRA-500/25 blur-2xl" />
       <span className="pointer-events-none absolute -bottom-12 left-10 h-32 w-32 rounded-full bg-TRA-500/15 blur-2xl" />
       <div className="relative flex h-full items-center gap-3 p-4">
-        <div className="flex -space-x-5">
-          <span className="rotate-[-8deg] text-[40px] drop-shadow-lg">📕</span>
-          <span className="rotate-[3deg] text-[44px] drop-shadow-lg">📙</span>
-          <span className="rotate-[10deg] text-[40px] drop-shadow-lg">📗</span>
-        </div>
         <div className="min-w-0">
           <div className="text-[10px] font-bold tracking-[0.18em] text-TRA-400">បណ្ណាល័យ TRA</div>
           <div className="mt-0.5 text-[15.5px] font-bold leading-[1.7] text-white">សៀវភៅអេឡិចត្រូនិចឥតគិតថ្លៃ</div>

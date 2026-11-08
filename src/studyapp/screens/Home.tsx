@@ -5,7 +5,7 @@ import Reader from "../../libraryapp/components/Reader";
 import { NoteIcon } from "../../libraryapp/components/Library";
 import type { Story } from "../../libraryapp/types";
 import { useStore } from "../store";
-import { Icon, SectionTitle, TopBar } from "../ui";
+import { HeroCarousel, Icon, SectionTitle, TopBar } from "../ui";
 
 export function HomeScreen() {
   const s = useStore();
@@ -49,6 +49,10 @@ export function HomeScreen() {
           </div>
         </div>
       )}
+
+      <div className="mt-4">
+        <HeroCarousel />
+      </div>
 
       {/* Quick menu grid */}
       <div className="mt-4 grid grid-cols-4 gap-y-4 px-4">
