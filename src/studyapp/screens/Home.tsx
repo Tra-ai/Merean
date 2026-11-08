@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IMG, MENU } from "../data";
+import { IMG } from "../data";
 import library from "../../libraryapp/data/library.json";
 import Reader from "../../libraryapp/components/Reader";
 import { NoteIcon } from "../../libraryapp/components/Library";
@@ -58,28 +58,6 @@ export function HomeScreen() {
         >
           <img src="/images/kuli-banner.jpg" alt="រឿង គូលីកំណែន" className="block h-auto w-full" />
         </button>
-      </div>
-
-      {/* Quick menu grid */}
-      <div className="mt-4 grid grid-cols-4 gap-y-4 px-4">
-        {MENU.map((m, i) => (
-          <button
-            key={m.id}
-            onClick={() => {
-              if (m.tab) s.switchTab(m.tab);
-              else if (m.screen === "favorites") s.push({ name: "favorites" });
-              else if (m.screen === "search") s.push({ name: "search" });
-              else if (m.screen === "about") s.push({ name: "about" });
-            }}
-            className="tap-img animate-fade-up flex flex-col items-center gap-1.5"
-            style={{ animationDelay: `${i * 45}ms` }}
-          >
-            <span className="grid h-[52px] w-[52px] place-items-center rounded-2xl bg-gradient-to-br from-TRA-50 to-TRA-100 text-[24px] shadow-[0_3px_10px_rgba(242,101,34,0.12)] ring-1 ring-TRA-200/60">
-              {m.icon}
-            </span>
-            <span className="px-0.5 text-center text-[10px] leading-[1.6] text-ink-700">{m.label}</span>
-          </button>
-        ))}
       </div>
 
       {/* អក្សរសាស្ត្រ — stories from the library */}
