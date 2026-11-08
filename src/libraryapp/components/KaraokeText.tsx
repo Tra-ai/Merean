@@ -49,6 +49,10 @@ function build(text: string, sentences: [number, number][]) {
   return { words, paragraphs };
 }
 
+// Highlight runs this many seconds ahead of the audio clock.
+// If the text is still late, raise it (e.g. 1.3); if it is early, lower it.
+const SYNC_OFFSET = 1;
+
 let lastUserScroll = 0;
 if (typeof window !== 'undefined') {
   const mark = () => { lastUserScroll = Date.now(); };
@@ -79,7 +83,7 @@ export default function KaraokeText({ text, sentences, audioRef }: Props) {
 
     function update(follow: boolean) {
       if (!audio) return;
-      const next = find(audio.currentTime);
+      const next = find(audio.currentTime + SYNC_OFFSET);
       if (next === current) return;
       if (current >= 0) elements.current[current]?.classList.remove('kw-active');
       current = next;
@@ -120,7 +124,7 @@ export default function KaraokeText({ text, sentences, audioRef }: Props) {
   function jump(index: number) {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.currentTime = words[index].start;
+    audio.currentTime = Math.max(0, words[index].start - SYNC_OFFSET);
     void audio.play().catch(() => undefined);
   }
 
