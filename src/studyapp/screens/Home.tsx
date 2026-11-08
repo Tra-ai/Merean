@@ -60,6 +60,23 @@ export function HomeScreen() {
         </button>
       </div>
 
+      {/* Translate box */}
+      <div className="mx-4 mt-4 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
+        <a
+          href="https://translate.google.com/?sl=en&tl=km&op=translate"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center gap-3 px-4 py-3 active:bg-black/5"
+        >
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[18px]">🌐</span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[15px] font-medium leading-[1.8] text-ink-900">បកប្រែ</span>
+            <span className="block text-[11px] leading-tight text-ink-400">អង់គ្លេស ⇄ ខ្មែរ</span>
+          </span>
+          <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
+        </a>
+      </div>
+
       {/* អក្សរសាស្ត្រ — stories from the library */}
       {library.categories.map((category, index) => {
         const stories = (library.stories as Story[]).filter((story) => story.category === index);
