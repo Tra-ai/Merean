@@ -7,6 +7,7 @@ import type { Story } from "../../libraryapp/types";
 import { useStore } from "../store";
 import { Icon, SectionTitle, TopBar } from "../ui";
 import Translator from "../Translator";
+import Dictionary from "../Dictionary";
 
 type InstallEvent = Event & {
   prompt: () => Promise<void>;
@@ -18,6 +19,7 @@ export function HomeScreen() {
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
   const [openStory, setOpenStory] = useState<Story | null>(null);
   const [translateOpen, setTranslateOpen] = useState(false);
+  const [dictOpen, setDictOpen] = useState(false);
   useEffect(() => {
     const capture = (e: Event) => { e.preventDefault(); setInstallEvent(e as InstallEvent); };
     const installed = () => { setInstallEvent(null); s.dismissInstall(); s.toast("TRA APP ត្រូវបានដំឡើងរួចរាល់ ✓", "📲"); };
@@ -106,6 +108,21 @@ export function HomeScreen() {
         </button>
       </div>
 
+      {/* Dictionary box */}
+      <div className="mx-4 mt-3 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
+        <button
+          onClick={() => setDictOpen(true)}
+          className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-black/5"
+        >
+          <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[18px]">📖</span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[15px] font-medium leading-[1.8] text-ink-900">វចនានុក្រម</span>
+            <span className="block text-[11px] leading-tight text-ink-400">ស្វែងរកន័យពាក្យខ្មែរ និង English</span>
+          </span>
+          <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
+        </button>
+      </div>
+
       {/* អក្សរសាស្ត្រ — stories from the library */}
       {library.categories.map((category, index) => {
         const stories = (library.stories as Story[]).filter((story) => story.category === index);
@@ -132,6 +149,7 @@ export function HomeScreen() {
       })}
 
       {translateOpen && <Translator onClose={() => setTranslateOpen(false)} />}
+      {dictOpen && <Dictionary onClose={() => setDictOpen(false)} />}
       {openStory && <Reader key={openStory.id} story={openStory} onClose={() => setOpenStory(null)} />}
     </div>
   );
