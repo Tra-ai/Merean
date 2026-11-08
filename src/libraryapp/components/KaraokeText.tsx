@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type RefObject } from 'react';
 
 interface Props {
   text: string;
@@ -50,8 +50,17 @@ function build(text: string, sentences: [number, number][]) {
 }
 
 // Highlight runs this many seconds ahead of the audio clock.
-// If the text is still late, raise it (e.g. 1.3); if it is early, lower it.
-const SYNC_OFFSET = 1;
+// The reader can fine-tune it with the - / + buttons; it is remembered on this device.
+const OFFSET_KEY = 'TRA-karaoke-offset';
+const DEFAULT_OFFSET = 2;
+
+function loadOffset() {
+  try {
+    const value = Number(localStorage.getItem(OFFSET_KEY));
+    if (localStorage.getItem(OFFSET_KEY) !== null && Number.isFinite(value)) return Math.min(5, Math.max(-2, value));
+  } catch { /* storage unavailable */ }
+  return DEFAULT_OFFSET;
+}
 
 let lastUserScroll = 0;
 if (typeof window !== 'undefined') {
@@ -63,6 +72,17 @@ if (typeof window !== 'undefined') {
 export default function KaraokeText({ text, sentences, audioRef }: Props) {
   const { words, paragraphs } = useMemo(() => build(text, sentences), [text, sentences]);
   const elements = useRef<(HTMLSpanElement | null)[]>([]);
+  const [offset, setOffset] = useState(loadOffset);
+  const offsetRef = useRef(offset);
+
+  function adjust(delta: number) {
+    const next = Math.round(Math.min(5, Math.max(-2, offset + delta)) * 100) / 100;
+    offsetRef.current = next;
+    setOffset(next);
+    try { localStorage.setItem(OFFSET_KEY, String(next)); } catch { /* ignore */ }
+    const audio = audioRef.current;
+    if (audio) audio.dispatchEvent(new Event('seeked'));
+  }
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -83,7 +103,7 @@ export default function KaraokeText({ text, sentences, audioRef }: Props) {
 
     function update(follow: boolean) {
       if (!audio) return;
-      const next = find(audio.currentTime + SYNC_OFFSET);
+      const next = find(audio.currentTime + offsetRef.current);
       if (next === current) return;
       if (current >= 0) elements.current[current]?.classList.remove('kw-active');
       current = next;
@@ -124,11 +144,18 @@ export default function KaraokeText({ text, sentences, audioRef }: Props) {
   function jump(index: number) {
     const audio = audioRef.current;
     if (!audio) return;
-    audio.currentTime = Math.max(0, words[index].start - SYNC_OFFSET);
+    audio.currentTime = Math.max(0, words[index].start - offsetRef.current);
     void audio.play().catch(() => undefined);
   }
 
+  const btn: CSSProperties = { width: 34, height: 34, borderRadius: 999, border: '1px solid rgba(0,0,0,.15)', background: '#fff', fontSize: 18, lineHeight: 1 };
   return <div className="kw-text">
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 8, marginBottom: 10, fontSize: 13, color: '#6b6b70' }}>
+      <span>កែសម្រួលសំឡេង/អក្សរ</span>
+      <button type="button" style={btn} onClick={() => adjust(-0.25)} aria-label="អក្សរយឺតជាងមុន">−</button>
+      <span style={{ minWidth: 44, textAlign: 'center' }}>{offset.toFixed(2)}s</span>
+      <button type="button" style={btn} onClick={() => adjust(0.25)} aria-label="អក្សរលឿនជាងមុន">+</button>
+    </div>
     {paragraphs.map((pieces, paragraphIndex) => <p key={paragraphIndex}>
       {pieces.map((piece, pieceIndex) => piece.word === null
         ? piece.text
