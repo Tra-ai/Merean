@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 interface Item { id: string; word: string; definition: string; short: string }
@@ -19,7 +19,10 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const reqId = useRef(0);
+
   async function load(q: string, page: number) {
+    const id = ++reqId.current;
     setLoading(true);
     setError("");
     try {
@@ -29,6 +32,7 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({ word: q, page }),
       });
       const json = await response.json();
+      if (id !== reqId.current) return;
       if (!response.ok || !Array.isArray(json.results)) {
         const wait = json?.retryAfter ? ` (${json.retryAfter} វិនាទី)` : "";
         setError((MESSAGES[json?.error] ?? "មិនអាចស្វែងរកបានទេ សូមព្យាយាមម្តងទៀត") + (json?.error === "rate_limited" ? wait : ""));
@@ -39,19 +43,32 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
       setItems((cur) => (page === 1 ? next.results : [...cur, ...next.results]));
       if (page === 1) setOpen(next.results.length === 1 ? next.results[0].id : null);
     } catch {
-      setError("មិនអាចស្វែងរកបានទេ សូមព្យាយាមម្តងទៀត");
+      if (id === reqId.current) setError("មិនអាចស្វែងរកបានទេ សូមព្យាយាមម្តងទៀត");
     } finally {
-      setLoading(false);
+      if (id === reqId.current) setLoading(false);
     }
   }
 
   function search() {
     const q = word.trim();
-    if (!q || loading) return;
-    setData(null);
-    setItems([]);
-    void load(q, 1);
+    if (q) void load(q, 1);
   }
+
+  // Search by itself shortly after typing stops.
+  useEffect(() => {
+    const q = word.trim();
+    if (!q) {
+      reqId.current++;
+      setData(null);
+      setItems([]);
+      setError("");
+      setLoading(false);
+      return;
+    }
+    const timer = window.setTimeout(() => { void load(q, 1); }, 450);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [word]);
 
   const more = data && data.page < data.totalPages;
 
@@ -73,7 +90,7 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
               className="min-w-0 flex-1 bg-transparent px-2 py-2 text-[16px] text-ink-900 outline-none placeholder:text-ink-300"
             />
             {word && <button type="button" onClick={() => { setWord(""); setData(null); setItems([]); setError(""); }} aria-label="សម្អាត" className="px-2 text-[18px] text-ink-400">×</button>}
-            <button type="submit" disabled={!word.trim() || loading} className="rounded-full bg-TRA-500 px-4 py-2 text-[14px] font-semibold text-white disabled:opacity-50">
+            <button type="submit" disabled={!word.trim()} className="rounded-full bg-TRA-500 px-4 py-2 text-[14px] font-semibold text-white disabled:opacity-50">
               {loading && items.length === 0 ? "..." : "ស្វែងរក"}
             </button>
           </form>

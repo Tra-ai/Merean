@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 const LANGS: { code: string; label: string }[] = [
@@ -13,6 +13,8 @@ const LANGS: { code: string; label: string }[] = [
 ];
 
 const MAX_CHARS = 50000;
+// Short texts translate by themselves while typing; longer ones wait for the button (saves quota).
+const AUTO_MAX = 500;
 
 export default function Translator({ onClose }: { onClose: () => void }) {
   const [from, setFrom] = useState("en");
@@ -23,11 +25,13 @@ export default function Translator({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
 
+  const reqId = useRef(0);
+
   async function run() {
-    if (!text.trim() || loading) return;
+    if (!text.trim()) return;
+    const id = ++reqId.current;
     setLoading(true);
     setError("");
-    setResult("");
     try {
       const response = await fetch("/api/translate", {
         method: "POST",
@@ -35,14 +39,29 @@ export default function Translator({ onClose }: { onClose: () => void }) {
         body: JSON.stringify({ text, from, to }),
       });
       const data = await response.json();
+      if (id !== reqId.current) return;
       if (!response.ok || typeof data.text !== "string") throw new Error("failed");
       setResult(data.text);
     } catch {
-      setError("មិនអាចបកប្រែបានទេ សូមព្យាយាមម្តងទៀត");
+      if (id === reqId.current) setError("មិនអាចបកប្រែបានទេ សូមព្យាយាមម្តងទៀត");
     } finally {
-      setLoading(false);
+      if (id === reqId.current) setLoading(false);
     }
   }
+
+  useEffect(() => {
+    if (!text.trim()) {
+      reqId.current++;
+      setResult("");
+      setError("");
+      setLoading(false);
+      return;
+    }
+    if (text.length > AUTO_MAX) return;
+    const timer = window.setTimeout(() => { void run(); }, 700);
+    return () => window.clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, from, to]);
 
   function swap() {
     setFrom(to);
@@ -88,13 +107,13 @@ export default function Translator({ onClose }: { onClose: () => void }) {
               className="block w-full resize-none bg-transparent text-[16px] leading-[1.8] text-ink-900 outline-none placeholder:text-ink-300"
             />
             <div className="mt-1 flex items-center justify-between text-[11px] text-ink-400">
-              <span>{text.length.toLocaleString()}/{MAX_CHARS.toLocaleString()}</span>
+              <span>{text.length.toLocaleString()}/{MAX_CHARS.toLocaleString()}{text.length > AUTO_MAX ? " · អត្ថបទវែង សូមចុចប៊ូតុងបកប្រែ" : ""}</span>
               {text && <button onClick={() => { setText(""); setResult(""); setError(""); }} className="px-2 py-1 text-TRA-600">សម្អាត</button>}
             </div>
           </div>
 
           <button
-            onClick={run}
+            onClick={() => void run()}
             disabled={!text.trim() || loading}
             className="w-full rounded-full bg-TRA-500 py-3 text-[16px] font-semibold text-white shadow-sm transition active:scale-[0.98] disabled:opacity-50"
           >
