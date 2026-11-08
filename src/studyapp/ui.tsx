@@ -59,7 +59,7 @@ export function TopBar({ onSearch, onBell }: { onSearch: () => void; onBell: () 
         <img src={IMG.rylIcon} alt="TRA" className="h-9 w-9 rounded-[10px] shadow-sm" />
         <div className="min-w-0 flex-1">
           <div className="text-[15px] font-bold leading-tight tracking-wide text-ink-900">TRA APP</div>
-          <div className="text-[10.5px] leading-tight text-ink-400">អានដើម្បីរីកចម្រើន · Read to Grow</div>
+          <div className="text-[10.5px] leading-tight text-ink-400">អានដើម្បីឈប់ J+o</div>
         </div>
         <button onClick={onSearch} aria-label="ស្វែងរក" className="tap grid h-9 w-9 place-items-center rounded-full bg-TRA-50 text-TRA-700">
           <Icon name="search" className="h-[18px] w-[18px]" />
