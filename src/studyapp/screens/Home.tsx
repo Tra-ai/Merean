@@ -5,7 +5,7 @@ import Reader from "../../libraryapp/components/Reader";
 import { NoteIcon } from "../../libraryapp/components/Library";
 import type { Story } from "../../libraryapp/types";
 import { useStore } from "../store";
-import { HeroCarousel, Icon, SectionTitle, TopBar } from "../ui";
+import { Icon, SectionTitle, TopBar } from "../ui";
 
 export function HomeScreen() {
   const s = useStore();
@@ -50,8 +50,14 @@ export function HomeScreen() {
         </div>
       )}
 
-      <div className="mt-4">
-        <HeroCarousel />
+      <div className="mt-4 px-4">
+        <button
+          onClick={() => setOpenStory((library.stories as Story[]).find((story) => story.id === "story-1") ?? null)}
+          className="tap block w-full overflow-hidden rounded-2xl shadow-card"
+          aria-label="រឿង គូលីកំណែន"
+        >
+          <img src="/images/kuli-banner.jpg" alt="រឿង គូលីកំណែន" className="block h-auto w-full" />
+        </button>
       </div>
 
       {/* Quick menu grid */}
