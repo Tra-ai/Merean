@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IMG } from "../data";
 import library from "../../libraryapp/data/library.json";
 import Reader from "../../libraryapp/components/Reader";
@@ -8,10 +8,39 @@ import { useStore } from "../store";
 import { Icon, SectionTitle, TopBar } from "../ui";
 import Translator from "../Translator";
 
+type InstallEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+};
+
 export function HomeScreen() {
   const s = useStore();
+  const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
   const [openStory, setOpenStory] = useState<Story | null>(null);
   const [translateOpen, setTranslateOpen] = useState(false);
+  useEffect(() => {
+    const capture = (e: Event) => { e.preventDefault(); setInstallEvent(e as InstallEvent); };
+    const installed = () => { setInstallEvent(null); s.dismissInstall(); s.toast("TRA APP ត្រូវបានដំឡើងរួចរាល់ ✓", "📲"); };
+    window.addEventListener("beforeinstallprompt", capture);
+    window.addEventListener("appinstalled", installed);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", capture);
+      window.removeEventListener("appinstalled", installed);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function install() {
+    if (installEvent) {
+      await installEvent.prompt();
+      await installEvent.userChoice.catch(() => undefined);
+      setInstallEvent(null);
+    } else {
+      s.toast("បើកម៉ឺនុយ Browser រួចចុច «បន្ថែមទៅអេក្រង់ដើម» 📲", "ℹ️");
+    }
+  }
+
+  const standalone = typeof window !== "undefined" && window.matchMedia?.("(display-mode: standalone)").matches;
   const hour = new Date().getHours();
   const greet = hour < 12 ? "អរុណសួស្តី ☀️" : hour < 17 ? "ទិវាសួស្តី 🌤️" : "សាយណ្ហសួស្តី 🌙";
 
@@ -31,12 +60,12 @@ export function HomeScreen() {
       </div>
 
       {/* Install banner */}
-      {!s.installDismissed && (
+      {!s.installDismissed && !standalone && (
         <div className="animate-fade-up mx-4 mt-3" style={{ animationDelay: "80ms" }}>
           <div className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border border-TRA-200 bg-gradient-to-r from-TRA-50 to-TRA-100 p-2.5">
             <button
               className="tap-img flex min-w-0 flex-1 items-center gap-2.5 text-left"
-              onClick={() => s.toast("TRA APP ត្រូវបានដំឡើងទៅទំព័រដើម ✓", "📲")}
+              onClick={install}
             >
               <img src={IMG.rylIcon} alt="" className="h-9 w-9 rounded-lg shadow-sm" />
               <span className="min-w-0">

@@ -1,4 +1,4 @@
-const CACHE = 'TRA-reader-v3';
+const CACHE = 'TRA-reader-v4';
 const APP_SHELL = [
   '/', '/assets/TRA-logo.png', '/data/stories.json',
   '/assets/icon-192.png', '/assets/icon-512.png', '/manifest.webmanifest',
@@ -30,6 +30,18 @@ self.addEventListener('fetch', (event) => {
       }
       return response;
     }).catch(async () => (await caches.match('/', { ignoreVary: true })) || Response.error()));
+    return;
+  }
+
+  // Story text and timings change when content is edited: always try the network first.
+  if (url.pathname.startsWith('/data/')) {
+    event.respondWith(fetch(request).then((response) => {
+      if (response.ok) {
+        const copy = response.clone();
+        event.waitUntil(caches.open(CACHE).then((cache) => cache.put(request, copy)));
+      }
+      return response;
+    }).catch(async () => (await caches.match(request, { ignoreVary: true })) || Response.error()));
     return;
   }
 

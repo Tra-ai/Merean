@@ -78,23 +78,23 @@ export default function Reader({ story, onClose }: { story: Story; onClose: () =
   return (
     <Dialog title={story.title} onClose={onClose} className="reader-modal">
       <div className="reader-scroll">
-        <button className="reader-breadcrumb" onClick={onClose} aria-label="Back to library">
+        <button className="reader-breadcrumb" onClick={onClose} aria-label="ត្រឡប់ទៅបណ្ណាល័យ">
           <ChevronLeft size={17} /><span>{story.title}</span>
         </button>
         {error ? <div className="reader-loading" role="alert">
           <BookOpen size={32} />
-          <p>This story could not be loaded. Please try again.</p>
-          <button className="button button-primary" onClick={() => setAttempt(attempt + 1)}><RotateCcw size={16} />Retry</button>
-        </div> : !content ? <div className="reader-loading" role="status"><span className="loading-spinner" /><span>Loading story...</span></div> : <>
-          {content.audio && <section className="audio-card" aria-label="Story audio">
+          <p>មិនអាចផ្ទុករឿងនេះបានទេ សូមព្យាយាមម្តងទៀត</p>
+          <button className="button button-primary" onClick={() => setAttempt(attempt + 1)}><RotateCcw size={16} />ព្យាយាមម្តងទៀត</button>
+        </div> : !content ? <div className="reader-loading" role="status"><span className="loading-spinner" /><span>កំពុងផ្ទុករឿង...</span></div> : <>
+          {content.audio && <section className="audio-card" aria-label="សំឡេងរឿង">
             <div className="audio-heading">
               <span className="headphone-icon"><Headphones size={22} strokeWidth={2} /></span>
               <div><h3>{labels.listen}</h3><p><Play size={10} fill="currentColor" />{labels.listenHint}</p></div>
             </div>
-            <audio ref={audioRef} src={content.audio} controls preload="metadata" controlsList="nodownload" aria-label={`Listen to ${story.title}`} onError={() => { setAudioCode(audioRef.current?.error?.code ?? 0); setAudioError(true); }} onCanPlay={() => setAudioError(false)} />
+            <audio ref={audioRef} src={content.audio} controls preload="metadata" controlsList="nodownload" aria-label={`ស្តាប់ ${story.title}`} onError={() => { setAudioCode(audioRef.current?.error?.code ?? 0); setAudioError(true); }} onCanPlay={() => setAudioError(false)} />
             {audioError && <div className="audio-error" role="alert">មិនអាចផ្ទុកសំឡេងបានទេ (កូដ {audioCode})<button onClick={() => { setAudioError(false); audioRef.current?.load(); }}>សាកម្ដងទៀត</button></div>}
           </section>}
-          <div className="reader-tabs" role="tablist" aria-label="Story sections">
+          <div className="reader-tabs" role="tablist" aria-label="ផ្នែករឿង">
             {content.tabs.map((tab, index) => {
               const Icon = tabIcons[index];
               return <button ref={(element) => { tabRefs.current[index] = element; }} key={tab.label} role="tab" id={`reader-tab-${index}`} aria-controls={`reader-panel-${index}`} aria-selected={activeTab === index} tabIndex={activeTab === index ? 0 : -1} className={activeTab === index ? 'active' : ''} onClick={() => setActiveTab(index)} onKeyDown={(event) => moveTab(event, index)}><Icon size={20} strokeWidth={1.8} /><span>{tab.label}</span></button>;
