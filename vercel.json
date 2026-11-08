@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!audio/|data/|assets/|icons/|manifest\\.webmanifest$|favicon\\.ico$).*)",
+      "source": "/((?!api/|audio/|data/|assets/|icons/|manifest\\.webmanifest$|favicon\\.ico$).*)",
       "destination": "/index.html"
     }
   ],

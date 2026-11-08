@@ -6,10 +6,12 @@ import { NoteIcon } from "../../libraryapp/components/Library";
 import type { Story } from "../../libraryapp/types";
 import { useStore } from "../store";
 import { Icon, SectionTitle, TopBar } from "../ui";
+import Translator from "../Translator";
 
 export function HomeScreen() {
   const s = useStore();
   const [openStory, setOpenStory] = useState<Story | null>(null);
+  const [translateOpen, setTranslateOpen] = useState(false);
   const hour = new Date().getHours();
   const greet = hour < 12 ? "អរុណសួស្តី ☀️" : hour < 17 ? "ទិវាសួស្តី 🌤️" : "សាយណ្ហសួស្តី 🌙";
 
@@ -62,19 +64,17 @@ export function HomeScreen() {
 
       {/* Translate box */}
       <div className="mx-4 mt-4 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
-        <a
-          href="https://translate.google.com/?sl=en&tl=km&op=translate"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex w-full items-center gap-3 px-4 py-3 active:bg-black/5"
+        <button
+          onClick={() => setTranslateOpen(true)}
+          className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-black/5"
         >
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[18px]">🌐</span>
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-medium leading-[1.8] text-ink-900">បកប្រែ</span>
-            <span className="block text-[11px] leading-tight text-ink-400">អង់គ្លេស ⇄ ខ្មែរ</span>
+            <span className="block text-[11px] leading-tight text-ink-400">ខ្មែរ ⇄ English និងភាសាផ្សេងទៀត</span>
           </span>
           <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
-        </a>
+        </button>
       </div>
 
       {/* អក្សរសាស្ត្រ — stories from the library */}
@@ -102,6 +102,7 @@ export function HomeScreen() {
         );
       })}
 
+      {translateOpen && <Translator onClose={() => setTranslateOpen(false)} />}
       {openStory && <Reader key={openStory.id} story={openStory} onClose={() => setOpenStory(null)} />}
     </div>
   );
