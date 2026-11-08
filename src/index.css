@@ -520,3 +520,8 @@ svg { flex-shrink: 0; }
   .unified-switch { top: 7px; }
   .unified-switch button { padding: 6px 10px; font-size: 10px; }
 }
+
+/* Highlight the word being read (light red) */
+.kw-text p { margin: 0 0 12px; }
+.kw-word { cursor: pointer; border-radius: 5px; transition: background-color 120ms ease; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.kw-word.kw-active { background-color: rgba(248, 113, 113, 0.35); color: #7f1d1d; }

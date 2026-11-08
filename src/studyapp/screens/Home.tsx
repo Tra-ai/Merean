@@ -1,9 +1,15 @@
+import { useState } from "react";
 import { IMG, MENU } from "../data";
+import library from "../../libraryapp/data/library.json";
+import Reader from "../../libraryapp/components/Reader";
+import { NoteIcon } from "../../libraryapp/components/Library";
+import type { Story } from "../../libraryapp/types";
 import { useStore } from "../store";
-import { HeroCarousel, Icon, TopBar } from "../ui";
+import { HeroCarousel, Icon, SectionTitle, TopBar } from "../ui";
 
 export function HomeScreen() {
   const s = useStore();
+  const [openStory, setOpenStory] = useState<Story | null>(null);
   const hour = new Date().getHours();
   const greet = hour < 12 ? "អរុណសួស្តី ☀️" : hour < 17 ? "ទិវាសួស្តី 🌤️" : "សាយណ្ហសួស្តី 🌙";
 
@@ -69,6 +75,32 @@ export function HomeScreen() {
           </button>
         ))}
       </div>
+
+      {/* អក្សរសាស្ត្រ — stories from the library */}
+      {library.categories.map((category, index) => {
+        const stories = (library.stories as Story[]).filter((story) => story.category === index);
+        if (!stories.length) return null;
+        return (
+          <div key={category} className="mt-6">
+            <SectionTitle>
+              <span className="inline-flex items-center gap-2"><NoteIcon size={20} />{category}</span>
+            </SectionTitle>
+            <div className="grid grid-cols-1 gap-2 px-4">
+              {stories.map((story) => (
+                <button
+                  key={story.id}
+                  onClick={() => setOpenStory(story)}
+                  className="tap flex w-full items-center rounded-xl border border-line bg-white px-3.5 py-3 text-left text-[13.5px] font-medium leading-[1.8] text-ink-900 shadow-sm"
+                >
+                  {story.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+
+      {openStory && <Reader key={openStory.id} story={openStory} onClose={() => setOpenStory(null)} />}
     </div>
   );
 }
