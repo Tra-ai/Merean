@@ -115,15 +115,15 @@ export function HomeScreen() {
             <SectionTitle>
               <span className="inline-flex items-center gap-2"><NoteIcon size={20} />{category}</span>
             </SectionTitle>
-            <div className="mx-4 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
-              {stories.map((story, i) => (
+            <div className="mx-4 grid grid-cols-2 gap-3">
+              {stories.map((story) => (
                 <button
                   key={story.id}
                   onClick={() => setOpenStory(story)}
-                  className={"flex w-full items-center justify-between gap-3 px-4 py-3 text-left text-[15px] leading-[1.8] text-ink-900 active:bg-black/5" + (i > 0 ? " border-t border-black/10" : "")}
+                  className="tap flex min-h-[118px] flex-col justify-between rounded-2xl bg-white p-3.5 text-left shadow-card"
                 >
-                  <span className="min-w-0 flex-1">{story.title}</span>
-                  <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
+                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-TRA-600"><NoteIcon size={20} /></span>
+                  <span className="mt-3 block text-[15px] font-semibold leading-[1.7] text-ink-900">{story.title}</span>
                 </button>
               ))}
             </div>
