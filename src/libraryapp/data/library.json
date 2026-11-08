@@ -1,0 +1,149 @@
+{
+  "categories": [
+    "\u17a2\u1780\u17d2\u179f\u179a\u179f\u17b7\u179b\u17d2\u1794\u17cd\u1781\u17c1\u1798\u179a\u1793\u17b7\u1799\u1798",
+    "\u17a2\u1780\u17d2\u179f\u179a\u179f\u17b7\u179b\u17d2\u1794\u17cd\u1794\u17d2\u179a\u1787\u17b6\u1794\u17d2\u179a\u17b7\u1799",
+    "\u17a2\u1780\u17d2\u179f\u179a\u179f\u17b7\u179b\u17d2\u1794\u17cd\u1796\u17bb\u1791\u17d2\u1792\u1793\u17b7\u1799\u1798",
+    "\u17a2\u1780\u17d2\u179f\u179a\u179f\u17b7\u179b\u17d2\u1794\u17cd\u1796\u17d2\u179a\u17b6\u17a0\u17d2\u1798\u178e\u17cd\u1793\u17b7\u1799\u1798",
+    "\u17a2\u1780\u17d2\u179f\u179a\u179f\u17b7\u179b\u17d2\u1794\u17cd\u1794\u179a\u1791\u17c1\u179f"
+  ],
+  "stories": [
+    {
+      "id": "story-1",
+      "title": "\u179a\u17bf\u1784 \u1782\u17bc\u179b\u17b8\u1780\u17c6\u1793\u17c2\u1793",
+      "category": 0,
+      "aliases": "Kuli Kamnen coolie"
+    },
+    {
+      "id": "story-2",
+      "title": "\u179a\u17bf\u1784 \u178f\u17c1\u1787\u17c4\u1799\u17c9\u178f",
+      "category": 0,
+      "aliases": "Techo Yot"
+    },
+    {
+      "id": "story-3",
+      "title": "\u179a\u17bf\u1784 \u1790\u17c5\u1780\u17c2\u1785\u17b7\u178f\u17d2\u178f\u1785\u17c4\u179a",
+      "category": 0,
+      "aliases": "Thavke Chet Chor"
+    },
+    {
+      "id": "story-4",
+      "title": "\u179a\u17bf\u1784 \u1780\u17bb\u179b\u17b6\u1794\u1794\u17c9\u17c3\u179b\u17b7\u1793",
+      "category": 0,
+      "aliases": "Kolab Pailin rose"
+    },
+    {
+      "id": "story-5",
+      "title": "\u179a\u17bf\u1784 \u179f\u17bc\u1795\u17b6\u178f",
+      "category": 0,
+      "aliases": "Sophat"
+    },
+    {
+      "id": "story-6",
+      "title": "\u179a\u17bf\u1784 \u178f\u17c1\u1787\u17c4\u178a\u17c6\u178c\u17b7\u1793",
+      "category": 0,
+      "aliases": "Techo Damdin"
+    },
+    {
+      "id": "story-7",
+      "title": "\u179a\u17bf\u1784 \u1791\u17bb\u17c6\u1791\u17b6\u179c",
+      "category": 0,
+      "aliases": "Tum Teav"
+    },
+    {
+      "id": "story-8",
+      "title": "\u179a\u17bf\u1784 \u1796\u17d2\u179a\u17c7\u17a2\u17b6\u1791\u17b7\u178f\u17d2\u1799\u1790\u17d2\u1798\u17b8\u179a\u17c7\u179b\u17be\u1795\u17c2\u1793\u178a\u17b8\u1785\u17b6\u179f\u17cb",
+      "category": 0,
+      "aliases": "Preah Atith Thmei sunrise"
+    },
+    {
+      "id": "story-9",
+      "title": "\u179a\u17bf\u1784 \u1797\u17bc\u1798\u17b7\u178f\u17b7\u179a\u1785\u17d2\u1786\u17b6\u1793",
+      "category": 0,
+      "aliases": "Phum Tirachhan"
+    },
+    {
+      "id": "story-10",
+      "title": "\u179a\u17bf\u1784 \u1798\u17b6\u179b\u17b6\u178a\u17bd\u1784\u1785\u17b7\u178f\u17d2\u178f",
+      "category": 0,
+      "aliases": "Mealea Duong Chet"
+    },
+    {
+      "id": "story-11",
+      "title": "\u179a\u17bf\u1784 \u1795\u17d2\u1780\u17b6\u179f\u17d2\u179a\u1796\u17c4\u1793",
+      "category": 0,
+      "aliases": "Phka Srapon wilted flower"
+    },
+    {
+      "id": "story-12",
+      "title": "\u179a\u17bf\u1784 \u179f\u17ca\u17b9\u1798\u17a2\u17d2\u1793\u1780\u1794\u179a\u17a1\u17b6\u1793",
+      "category": 0,
+      "aliases": "Sim the Driver"
+    },
+    {
+      "id": "story-13",
+      "title": "\u179a\u17bf\u1784\u200b\u1782\u17d2\u179a\u17bc\u1794\u1784\u17d2\u179a\u17c0\u1793\u179f\u17d2\u179a\u17bb\u1780\u179f\u17d2\u179a\u17c2",
+      "category": 0,
+      "aliases": "Rural Teacher"
+    },
+    {
+      "id": "story-14",
+      "title": "\u179a\u17bf\u1784\u1792\u1789\u17d2\u1785\u17d0\u1799",
+      "category": 0,
+      "aliases": "Thon Chey"
+    },
+    {
+      "id": "story-15",
+      "title": "\u179a\u17bf\u1784 \u1798\u17b6\u1799\u17be\u1784",
+      "category": 1,
+      "aliases": "Ma Yeung"
+    },
+    {
+      "id": "story-16",
+      "title": "\u179a\u17bf\u1784 \u1798\u17a0\u17b6\u179c\u17c1\u179f\u17d2\u179f\u1793\u17d2\u178f\u179a\u1787\u17b6\u178f\u1780",
+      "category": 2,
+      "aliases": "Vessantara"
+    },
+    {
+      "id": "story-17",
+      "title": "\u179a\u17bf\u1784 \u1796\u17d2\u179a\u17c7\u178f\u17c1\u1798\u17b7\u1799\u1787\u17b6\u178f\u1780",
+      "category": 2,
+      "aliases": "Temiya"
+    },
+    {
+      "id": "story-18",
+      "title": "\u179a\u17bf\u1784 \u179f\u17bb\u179c\u178e\u17d2\u178e\u179f\u17b6\u1798\u1787\u17b6\u178f\u1780\u200b",
+      "category": 2,
+      "aliases": "Suvannasama"
+    },
+    {
+      "id": "story-19",
+      "title": "\u179a\u17bf\u1784 \u1798\u17a0\u17c4\u179f\u1790\u1787\u17b6\u178f\u1780\u200b",
+      "category": 2,
+      "aliases": "Mahosadha"
+    },
+    {
+      "id": "story-20",
+      "title": "\u200b\u179a\u17bf\u1784 \u17a0\u1784\u17d2\u179f\u1799\u1793\u17d2\u178f\u200b",
+      "category": 2,
+      "aliases": "Hong Yont"
+    },
+    {
+      "id": "story-21",
+      "title": "\u179a\u17bf\u1784 \u179a\u17b6\u1798\u1780\u17c1\u179a\u17d2\u178f\u17b7\u17cd",
+      "category": 3,
+      "aliases": "Reamker Ramayana"
+    },
+    {
+      "id": "story-22",
+      "title": "\u179a\u17bf\u1784 \u1794\u17c9\u17bc\u179b \u179c\u17b8\u179a\u17a0\u17d2\u179f\u17b8\u1793\u17b8\u200b",
+      "category": 4,
+      "aliases": "Paul et Virginie"
+    },
+    {
+      "id": "story-23",
+      "title": "\u179a\u17bf\u1784 \u17a0\u17b6\u17c6\u179b\u17c2\u178f\u200b",
+      "category": 4,
+      "aliases": "Hamlet Shakespeare"
+    }
+  ]
+}
