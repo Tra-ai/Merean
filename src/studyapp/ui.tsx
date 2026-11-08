@@ -54,7 +54,7 @@ export function Icon({ name, className, strokeWidth = 2 }: { name: string; class
 
 export function TopBar({ onSearch, onBell }: { onSearch: () => void; onBell: () => void }) {
   return (
-    <div className="sticky top-0 z-30 border-b border-line/80 bg-white/92 backdrop-blur-md">
+    <div className="sticky top-0 z-30 border-b border-black/10 bg-white/75 backdrop-blur-xl backdrop-saturate-150">
       <div className="flex items-center gap-2.5 px-4 py-2.5">
         <img src={IMG.rylIcon} alt="TRA" className="h-9 w-9 rounded-[10px] shadow-sm" />
         <div className="min-w-0 flex-1">
@@ -76,7 +76,7 @@ export function TopBar({ onSearch, onBell }: { onSearch: () => void; onBell: () 
 export function DetailHeader({ title, sub, right }: { title: string; sub?: string; right?: ReactNode }) {
   const { pop } = useStore();
   return (
-    <div className="sticky top-0 z-30 border-b border-line/80 bg-white/92 backdrop-blur-md">
+    <div className="sticky top-0 z-30 border-b border-black/10 bg-white/75 backdrop-blur-xl backdrop-saturate-150">
       <div className="flex items-center gap-1.5 px-2 py-2">
         <button onClick={pop} aria-label="ត្រឡប់ក្រោយ" className="tap grid h-10 w-10 shrink-0 place-items-center rounded-full text-ink-700">
           <Icon name="back" className="h-5 w-5" strokeWidth={2.4} />
@@ -99,17 +99,16 @@ const TABS: { id: TabId; label: string; icon: string }[] = [
 export function TabBar() {
   const { tab, switchTab } = useStore();
   return (
-    <nav className="relative z-30 border-t border-line bg-white/95 pb-[max(env(safe-area-inset-bottom),6px)] backdrop-blur-md">
-      <div className="grid grid-cols-5">
+    <nav className="relative z-30 border-t border-black/10 bg-white/75 pb-[max(env(safe-area-inset-bottom),6px)] backdrop-blur-xl backdrop-saturate-150">
+      <div className="grid grid-cols-2">
         {TABS.map((t) => {
           const active = tab === t.id;
           return (
             <button key={t.id} onClick={() => switchTab(t.id)} className="group relative flex flex-col items-center gap-0.5 pb-1 pt-2">
-              <span className={cn("absolute top-0 h-[3px] w-8 rounded-full bg-TRA-500 transition-all duration-300", active ? "opacity-100 scale-x-100" : "opacity-0 scale-x-0")} />
-              <span className={cn("grid h-7 w-12 place-items-center rounded-full transition-all duration-200", active ? "bg-TRA-100 text-TRA-600" : "text-ink-400 group-active:bg-TRA-50")}>
+              <span className={cn("grid h-7 w-12 place-items-center transition-colors duration-200", active ? "text-TRA-600" : "text-[#8e8e93]")}>
                 <Icon name={t.icon} className="h-[20px] w-[20px]" strokeWidth={active ? 2.3 : 1.9} />
               </span>
-              <span className={cn("text-[10px] leading-tight transition-colors", active ? "font-semibold text-TRA-700" : "text-ink-400")}>{t.label}</span>
+              <span className={cn("text-[10px] leading-tight transition-colors", active ? "font-medium text-TRA-600" : "text-[#8e8e93]")}>{t.label}</span>
             </button>
           );
         })}
