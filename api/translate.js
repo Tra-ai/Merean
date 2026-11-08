@@ -6,7 +6,9 @@ const NAMES = {
   km: "Khmer", en: "English", zh: "Chinese", th: "Thai",
   vi: "Vietnamese", fr: "French", ja: "Japanese", ko: "Korean",
 };
-const MAX = 2000;
+const MAX = 50000;
+const PIECE = 3000;   // characters per Gemini request
+const PARALLEL = 4;   // requests at the same time
 
 async function withGemini(text, from, to) {
   const key = process.env.GEMINI_API_KEY;
@@ -33,14 +35,14 @@ async function withGemini(text, from, to) {
   return out || null;
 }
 
-function chunks(text) {
+function chunks(text, limit = 400) {
   const parts = text.split(/(?<=[.!?។\n])/);
   const out = [];
   let current = "";
   for (const part of parts) {
-    if ((current + part).length > 400 && current) { out.push(current); current = ""; }
+    if ((current + part).length > limit && current) { out.push(current); current = ""; }
     current += part;
-    while (current.length > 400) { out.push(current.slice(0, 400)); current = current.slice(400); }
+    while (current.length > limit) { out.push(current.slice(0, limit)); current = current.slice(limit); }
   }
   if (current) out.push(current);
   return out;
@@ -77,14 +79,34 @@ export default async function handler(req, res) {
   }
   const clean = text.slice(0, MAX);
   try {
-    let out = null;
-    let engine = "gemini";
-    try { out = await withGemini(clean, from, to); } catch { out = null; }
-    if (!out) { engine = "mymemory"; out = await withMyMemory(clean, from, to); }
-    if (!out) {
+    const pieces = chunks(clean, PIECE);
+    const results = new Array(pieces.length);
+    const engines = new Set();
+    let next = 0;
+    let failed = false;
+    async function worker() {
+      while (!failed) {
+        const i = next++;
+        if (i >= pieces.length) return;
+        const piece = pieces[i];
+        if (!piece.trim()) { results[i] = piece; continue; }
+        let out = null;
+        try { out = await withGemini(piece, from, to); if (out) engines.add("gemini"); } catch { out = null; }
+        if (!out) { out = await withMyMemory(piece, from, to); if (out) engines.add("mymemory"); }
+        if (!out) { failed = true; return; }
+        // keep the original line breaks at the edges of each piece
+        const lead = piece.match(/^\s*/)[0];
+        const tail = piece.match(/\s*$/)[0];
+        results[i] = lead + out.trim() + tail;
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(PARALLEL, pieces.length) }, worker));
+    if (failed) {
       res.status(502).json({ error: "Translation failed" });
       return;
     }
+    const out = results.join("");
+    const engine = [...engines].join("+") || "none";
     res.status(200).json({ text: out, engine });
   } catch {
     res.status(502).json({ error: "Translation failed" });

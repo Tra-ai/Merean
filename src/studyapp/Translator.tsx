@@ -12,6 +12,8 @@ const LANGS: { code: string; label: string }[] = [
   { code: "ko", label: "한국어" },
 ];
 
+const MAX_CHARS = 50000;
+
 export default function Translator({ onClose }: { onClose: () => void }) {
   const [from, setFrom] = useState("en");
   const [to, setTo] = useState("km");
@@ -80,13 +82,13 @@ export default function Translator({ onClose }: { onClose: () => void }) {
           <div className="rounded-2xl bg-white p-3 shadow-sm">
             <textarea
               value={text}
-              onChange={(e) => setText(e.target.value.slice(0, 2000))}
+              onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
               placeholder="វាយអក្សរនៅទីនេះ..."
               rows={6}
               className="block w-full resize-none bg-transparent text-[16px] leading-[1.8] text-ink-900 outline-none placeholder:text-ink-300"
             />
             <div className="mt-1 flex items-center justify-between text-[11px] text-ink-400">
-              <span>{text.length}/2000</span>
+              <span>{text.length.toLocaleString()}/{MAX_CHARS.toLocaleString()}</span>
               {text && <button onClick={() => { setText(""); setResult(""); setError(""); }} className="px-2 py-1 text-TRA-600">សម្អាត</button>}
             </div>
           </div>
