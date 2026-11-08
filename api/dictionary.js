@@ -3,8 +3,8 @@
 // Uses the Tra Khmer Dictionary API (https://tra-api-v1.vercel.app/api).
 // Set TRA_API_TOKEN in Vercel (Settings > Environment Variables). The token never reaches the browser.
 //
-// Data: Khmer Choun Nath Dictionary (Open Institute, LGPL 2.1) and
-//       SBBIC English Khmer Dictionary (Society for Better Books in Cambodia, MIT).
+// Data: Khmer Choun Nath Dictionary (Open Institute, LGPL 2.1)
+//       (Khmer to Khmer only.)
 
 const BASE = process.env.TRA_API_BASE || "https://tra-api-v1.vercel.app/api";
 const MAX = 100;
@@ -32,7 +32,11 @@ export default async function handler(req, res) {
     return;
   }
 
-  const mode = isKhmer(word) ? "km" : "en";
+  if (!isKhmer(word)) {
+    res.status(400).json({ error: "khmer_only" });
+    return;
+  }
+  const mode = "km";
   const key = `${mode}|${word.toLowerCase()}|${page}`;
   const hit = cache.get(key);
   if (hit && Date.now() - hit.at < TTL) {
@@ -41,7 +45,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `${BASE}${mode === "km" ? "/search" : "/en/search"}?q=${encodeURIComponent(word)}&limit=${LIMIT}&page=${page}`;
+    const url = `${BASE}/search?q=${encodeURIComponent(word)}&limit=${LIMIT}&page=${page}`;
     const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
     if (response.status === 429) {
       res.status(429).json({ error: "rate_limited", retryAfter: Number(response.headers.get("retry-after")) || 30 });

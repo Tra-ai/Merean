@@ -7,6 +7,7 @@ interface Data { mode: "km" | "en"; query: string; total: number; page: number; 
 const MESSAGES: Record<string, string> = {
   not_configured: "វចនានុក្រមមិនទាន់ត្រូវបានតំឡើង (ខ្វះ TRA_API_TOKEN)",
   token_rejected: "Token របស់វចនានុក្រមមិនត្រឹមត្រូវ ឬផុតកំណត់",
+  khmer_only: "សូមវាយពាក្យជាអក្សរខ្មែរ",
   rate_limited: "ស្វែងរកញឹកញាប់ពេក សូមរង់ចាំបន្តិច",
 };
 
@@ -67,7 +68,7 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
             <input
               value={word}
               onChange={(e) => setWord(e.target.value.slice(0, 100))}
-              placeholder="វាយពាក្យខ្មែរ ឬ English..."
+              placeholder="វាយពាក្យខ្មែរ..."
               enterKeyHint="search"
               className="min-w-0 flex-1 bg-transparent px-2 py-2 text-[16px] text-ink-900 outline-none placeholder:text-ink-300"
             />
@@ -86,7 +87,7 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
           {data && items.length > 0 && (
             <>
               <div className="px-1 text-[12px] text-ink-900/70">
-                {data.mode === "km" ? "ខ្មែរ → ខ្មែរ" : "English → ខ្មែរ"} · រកឃើញ {data.total.toLocaleString()}
+                ន័យពាក្យខ្មែរ · រកឃើញ {data.total.toLocaleString()}
               </div>
               <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
                 {items.map((item, i) => {
@@ -120,7 +121,7 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
           )}
 
           <p className="px-2 pt-2 text-center text-[10.5px] leading-[1.7] text-ink-900/60">
-            ប្រភព៖ វចនានុក្រមខ្មែរ ជួន ណាត (Open Institute, LGPL 2.1) · SBBIC English–Khmer Dictionary (MIT)
+            ប្រភព៖ វចនានុក្រមខ្មែរ ជួន ណាត (Open Institute, LGPL 2.1)
           </p>
         </div>
       </div>

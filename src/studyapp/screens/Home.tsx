@@ -117,7 +117,7 @@ export function HomeScreen() {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[18px]">📖</span>
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-medium leading-[1.8] text-ink-900">វចនានុក្រម</span>
-            <span className="block text-[11px] leading-tight text-ink-400">ស្វែងរកន័យពាក្យខ្មែរ និង English</span>
+            <span className="block text-[11px] leading-tight text-ink-400">ស្វែងរកន័យពាក្យខ្មែរ</span>
           </span>
           <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
         </button>
