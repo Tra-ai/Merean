@@ -15,7 +15,14 @@ const cache = new Map();
 const isKhmer = (text) => /[ក-៿]/.test(text);
 const clean = (value) => String(value ?? "").replace(/<[^>]*>/g, "").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").trim();
 
+const VERSION = 27;
+
 export default async function handler(req, res) {
+  // Open /api/dictionary in a browser to check which version is live.
+  if (req.method === "GET") {
+    res.status(200).json({ ok: true, version: VERSION, mode: "khmer-only", tokenSet: Boolean(process.env.TRA_API_TOKEN) });
+    return;
+  }
   if (req.method !== "POST") {
     res.status(405).json({ error: "POST only" });
     return;

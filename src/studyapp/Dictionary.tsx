@@ -138,7 +138,7 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
           )}
 
           <p className="px-2 pt-2 text-center text-[10.5px] leading-[1.7] text-ink-900/60">
-            ប្រភព៖ វចនានុក្រមខ្មែរ ជួន ណាត (Open Institute, LGPL 2.1)
+            ប្រភព៖ វចនានុក្រមខ្មែរ ជួន ណាត (Open Institute, LGPL 2.1) · v27
           </p>
         </div>
       </div>

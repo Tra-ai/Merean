@@ -1,4 +1,4 @@
-const CACHE = 'TRA-reader-v4';
+const CACHE = 'TRA-reader-v5';
 const APP_SHELL = [
   '/', '/assets/TRA-logo.png', '/data/stories.json',
   '/assets/icon-192.png', '/assets/icon-512.png', '/manifest.webmanifest',
