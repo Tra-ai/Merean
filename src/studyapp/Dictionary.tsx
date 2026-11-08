@@ -1,36 +1,58 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
 
-interface Entry { pos: string; km: string; en: string; example: string }
-interface Result { word: string; pronunciation: string; entries: Entry[] }
+interface Item { id: string; word: string; definition: string; short: string }
+interface Data { mode: "km" | "en"; query: string; total: number; page: number; totalPages: number; results: Item[] }
+
+const MESSAGES: Record<string, string> = {
+  not_configured: "វចនានុក្រមមិនទាន់ត្រូវបានតំឡើង (ខ្វះ TRA_API_TOKEN)",
+  token_rejected: "Token របស់វចនានុក្រមមិនត្រឹមត្រូវ ឬផុតកំណត់",
+  rate_limited: "ស្វែងរកញឹកញាប់ពេក សូមរង់ចាំបន្តិច",
+};
 
 export default function Dictionary({ onClose }: { onClose: () => void }) {
   const [word, setWord] = useState("");
-  const [result, setResult] = useState<Result | null>(null);
+  const [data, setData] = useState<Data | null>(null);
+  const [items, setItems] = useState<Item[]>([]);
+  const [open, setOpen] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function search() {
-    const q = word.trim();
-    if (!q || loading) return;
+  async function load(q: string, page: number) {
     setLoading(true);
     setError("");
-    setResult(null);
     try {
       const response = await fetch("/api/dictionary", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ word: q }),
+        body: JSON.stringify({ word: q, page }),
       });
-      const data = await response.json();
-      if (!response.ok || !Array.isArray(data.entries)) throw new Error("failed");
-      setResult(data as Result);
+      const json = await response.json();
+      if (!response.ok || !Array.isArray(json.results)) {
+        const wait = json?.retryAfter ? ` (${json.retryAfter} វិនាទី)` : "";
+        setError((MESSAGES[json?.error] ?? "មិនអាចស្វែងរកបានទេ សូមព្យាយាមម្តងទៀត") + (json?.error === "rate_limited" ? wait : ""));
+        return;
+      }
+      const next = json as Data;
+      setData(next);
+      setItems((cur) => (page === 1 ? next.results : [...cur, ...next.results]));
+      if (page === 1) setOpen(next.results.length === 1 ? next.results[0].id : null);
     } catch {
       setError("មិនអាចស្វែងរកបានទេ សូមព្យាយាមម្តងទៀត");
     } finally {
       setLoading(false);
     }
   }
+
+  function search() {
+    const q = word.trim();
+    if (!q || loading) return;
+    setData(null);
+    setItems([]);
+    void load(q, 1);
+  }
+
+  const more = data && data.page < data.totalPages;
 
   return createPortal(
     <div className="fixed inset-0 z-[80] bg-[#b98b5e]" role="dialog" aria-label="វចនានុក្រម">
@@ -41,47 +63,65 @@ export default function Dictionary({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
-          <form
-            onSubmit={(e) => { e.preventDefault(); void search(); }}
-            className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-sm"
-          >
+          <form onSubmit={(e) => { e.preventDefault(); search(); }} className="flex items-center gap-2 rounded-2xl bg-white p-2 shadow-sm">
             <input
               value={word}
-              onChange={(e) => setWord(e.target.value.slice(0, 80))}
+              onChange={(e) => setWord(e.target.value.slice(0, 100))}
               placeholder="វាយពាក្យខ្មែរ ឬ English..."
               enterKeyHint="search"
               className="min-w-0 flex-1 bg-transparent px-2 py-2 text-[16px] text-ink-900 outline-none placeholder:text-ink-300"
             />
-            {word && <button type="button" onClick={() => { setWord(""); setResult(null); setError(""); }} aria-label="សម្អាត" className="px-2 text-[18px] text-ink-400">×</button>}
+            {word && <button type="button" onClick={() => { setWord(""); setData(null); setItems([]); setError(""); }} aria-label="សម្អាត" className="px-2 text-[18px] text-ink-400">×</button>}
             <button type="submit" disabled={!word.trim() || loading} className="rounded-full bg-TRA-500 px-4 py-2 text-[14px] font-semibold text-white disabled:opacity-50">
-              {loading ? "..." : "ស្វែងរក"}
+              {loading && items.length === 0 ? "..." : "ស្វែងរក"}
             </button>
           </form>
 
           {error && <div className="rounded-xl bg-white px-4 py-3 text-[13px] text-busr-600" role="alert">{error}</div>}
 
-          {result && result.entries.length === 0 && (
-            <div className="rounded-2xl bg-white px-4 py-5 text-center text-[14px] text-ink-500">រកមិនឃើញពាក្យ «{word.trim()}» ទេ</div>
+          {data && items.length === 0 && (
+            <div className="rounded-2xl bg-white px-4 py-5 text-center text-[14px] text-ink-500">រកមិនឃើញពាក្យ «{data.query}» ទេ</div>
           )}
 
-          {result && result.entries.length > 0 && (
-            <div className="rounded-2xl bg-white p-4 shadow-sm">
-              <div className="flex flex-wrap items-baseline gap-x-3">
-                <h2 className="text-[22px] font-bold leading-[1.6] text-ink-900">{result.word}</h2>
-                {result.pronunciation && <span className="text-[14px] text-ink-400">/{result.pronunciation}/</span>}
+          {data && items.length > 0 && (
+            <>
+              <div className="px-1 text-[12px] text-ink-900/70">
+                {data.mode === "km" ? "ខ្មែរ → ខ្មែរ" : "English → ខ្មែរ"} · រកឃើញ {data.total.toLocaleString()}
               </div>
-              <ol className="mt-2 space-y-4">
-                {result.entries.map((entry, i) => (
-                  <li key={i} className="border-t border-black/10 pt-3 first:border-0 first:pt-0">
-                    {entry.pos && <span className="inline-block rounded-full bg-TRA-50 px-2.5 py-0.5 text-[12px] font-medium text-TRA-600">{entry.pos}</span>}
-                    {entry.en && <div className="mt-1 text-[15px] font-semibold leading-[1.7] text-ink-900">{entry.en}</div>}
-                    {entry.km && <div className="text-[15px] leading-[1.8] text-ink-900">{entry.km}</div>}
-                    {entry.example && <div className="mt-1 text-[14px] italic leading-[1.8] text-ink-500">“{entry.example}”</div>}
-                  </li>
-                ))}
-              </ol>
-            </div>
+              <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+                {items.map((item, i) => {
+                  const expanded = open === item.id;
+                  const preview = item.short || item.definition;
+                  return (
+                    <button
+                      key={`${item.id}-${i}`}
+                      onClick={() => setOpen(expanded ? null : item.id)}
+                      aria-expanded={expanded}
+                      className={"block w-full px-4 py-3 text-left active:bg-black/5" + (i > 0 ? " border-t border-black/10" : "")}
+                    >
+                      <div className="text-[17px] font-bold leading-[1.7] text-ink-900">{item.word}</div>
+                      <div className={"whitespace-pre-wrap break-words text-[14px] leading-[1.8] text-ink-500" + (expanded ? "" : " line-clamp-2")}>
+                        {expanded ? item.definition || preview : preview}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+              {more && (
+                <button
+                  onClick={() => void load(data.query, data.page + 1)}
+                  disabled={loading}
+                  className="w-full rounded-full bg-white py-3 text-[14px] font-semibold text-TRA-600 shadow-sm disabled:opacity-50"
+                >
+                  {loading ? "កំពុងផ្ទុក..." : "បង្ហាញបន្ថែម"}
+                </button>
+              )}
+            </>
           )}
+
+          <p className="px-2 pt-2 text-center text-[10.5px] leading-[1.7] text-ink-900/60">
+            ប្រភព៖ វចនានុក្រមខ្មែរ ជួន ណាត (Open Institute, LGPL 2.1) · SBBIC English–Khmer Dictionary (MIT)
+          </p>
         </div>
       </div>
     </div>,
