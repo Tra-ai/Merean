@@ -190,20 +190,7 @@ export function ProfileScreen() {
 
       {/* Menu list */}
       <div className="mx-4 mt-4 overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-        {[
-          { icon: "🔖", label: "សៀវភៅចំណាំរបស់ខ្ញុំ", sub: `${s.favorites.length} ក្បាល`, act: () => s.push({ name: "favorites" }) },
-          { icon: "🔍", label: "ស្វែងរកទាំងអស់", sub: "សៀវភៅ · មុខវិជ្ជា · សាកលវិទ្យាល័យ", act: () => s.push({ name: "search" }) },
-        ].map((m, i) => (
-          <button key={m.label} onClick={m.act} className={cn("tap flex w-full items-center gap-3 px-4 py-3.5 text-left", i > 0 && "border-t border-line/70")}>
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[17px]">{m.icon}</span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[13px] font-medium text-ink-900">{m.label}</span>
-              <span className="block text-[10px] text-ink-400">{m.sub}</span>
-            </span>
-            <Icon name="right" className="h-4 w-4 text-ink-300" />
-          </button>
-        ))}
-        <div className="flex w-full items-center gap-3 border-t border-line/70 px-4 py-3.5">
+        <div className="flex w-full items-center gap-3 px-4 py-3.5">
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[17px]">🔔</span>
           <span className="min-w-0 flex-1">
             <span className="block text-[13px] font-medium text-ink-900">ការជូនដំណឹង</span>
