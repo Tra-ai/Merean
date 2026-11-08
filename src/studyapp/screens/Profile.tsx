@@ -193,7 +193,6 @@ export function ProfileScreen() {
         {[
           { icon: "🔖", label: "សៀវភៅចំណាំរបស់ខ្ញុំ", sub: `${s.favorites.length} ក្បាល`, act: () => s.push({ name: "favorites" }) },
           { icon: "🔍", label: "ស្វែងរកទាំងអស់", sub: "សៀវភៅ · មុខវិជ្ជា · សាកលវិទ្យាល័យ", act: () => s.push({ name: "search" }) },
-          { icon: "💡", label: "អំពី TRA APP", sub: "កំណែ 2.6 · អានដើម្បីរីកចម្រើន", act: () => s.push({ name: "about" }) },
         ].map((m, i) => (
           <button key={m.label} onClick={m.act} className={cn("tap flex w-full items-center gap-3 px-4 py-3.5 text-left", i > 0 && "border-t border-line/70")}>
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[17px]">{m.icon}</span>
