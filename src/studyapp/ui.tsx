@@ -93,9 +93,6 @@ export function DetailHeader({ title, sub, right }: { title: string; sub?: strin
 
 const TABS: { id: TabId; label: string; icon: string }[] = [
   { id: "home", label: "ទំព័រដើម", icon: "home" },
-  { id: "books", label: "សៀវភៅ", icon: "book" },
-  { id: "exam", label: "បាក់ឌុប", icon: "grad" },
-  { id: "uni", label: "សាកលវិទ្យាល័យ", icon: "bank" },
   { id: "profile", label: "គណនី", icon: "user" },
 ];
 
