@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { IMG } from "../data";
 import { useStore } from "../store";
 import { Icon, TopBar } from "../ui";
-import Translator from "../Translator";
-import Dictionary from "../Dictionary";
 
 type InstallEvent = Event & {
   prompt: () => Promise<void>;
@@ -13,8 +11,6 @@ type InstallEvent = Event & {
 export function HomeScreen() {
   const s = useStore();
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
-  const [translateOpen, setTranslateOpen] = useState(false);
-  const [dictOpen, setDictOpen] = useState(false);
   useEffect(() => {
     const capture = (e: Event) => { e.preventDefault(); setInstallEvent(e as InstallEvent); };
     const installed = () => { setInstallEvent(null); s.dismissInstall(); s.toast("TRA APP ត្រូវបានដំឡើងរួចរាល់ ✓", "📲"); };
@@ -77,42 +73,6 @@ export function HomeScreen() {
           </div>
         </div>
       )}
-
-      <div className="mx-4 mt-4 grid gap-3 md:grid-cols-2">
-      {/* Translate box */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
-        <button
-          onClick={() => setTranslateOpen(true)}
-          className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-black/5"
-        >
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[18px]">🌐</span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[15px] font-medium leading-[1.8] text-ink-900">បកប្រែ</span>
-            <span className="block text-[11px] leading-tight text-ink-400">ខ្មែរ ⇄ English និងភាសាផ្សេងទៀត</span>
-          </span>
-          <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
-        </button>
-      </div>
-
-      {/* Dictionary box */}
-      <div className="overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
-        <button
-          onClick={() => setDictOpen(true)}
-          className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-black/5"
-        >
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-[18px]">📖</span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[15px] font-medium leading-[1.8] text-ink-900">វចនានុក្រម</span>
-            <span className="block text-[11px] leading-tight text-ink-400">ស្វែងរកន័យពាក្យខ្មែរ</span>
-          </span>
-          <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
-        </button>
-      </div>
-
-      </div>
-
-      {translateOpen && <Translator onClose={() => setTranslateOpen(false)} />}
-      {dictOpen && <Dictionary onClose={() => setDictOpen(false)} />}
     </div>
   );
 }
