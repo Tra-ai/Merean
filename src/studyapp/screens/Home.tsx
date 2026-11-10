@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 import { IMG } from "../data";
-import library from "../../libraryapp/data/library.json";
-import Reader from "../../libraryapp/components/Reader";
-import { NoteIcon } from "../../libraryapp/components/Library";
-import type { Story } from "../../libraryapp/types";
 import { useStore } from "../store";
-import { Icon, SectionTitle, TopBar } from "../ui";
+import { Icon, TopBar } from "../ui";
 import Translator from "../Translator";
 import Dictionary from "../Dictionary";
 
@@ -17,7 +13,6 @@ type InstallEvent = Event & {
 export function HomeScreen() {
   const s = useStore();
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
-  const [openStory, setOpenStory] = useState<Story | null>(null);
   const [translateOpen, setTranslateOpen] = useState(false);
   const [dictOpen, setDictOpen] = useState(false);
   useEffect(() => {
@@ -83,16 +78,6 @@ export function HomeScreen() {
         </div>
       )}
 
-      <div className="mt-4 px-4">
-        <button
-          onClick={() => setOpenStory((library.stories as Story[]).find((story) => story.id === "story-1") ?? null)}
-          className="tap block w-full overflow-hidden rounded-2xl shadow-card"
-          aria-label="រឿង គូលីកំណែន"
-        >
-          <img src="/images/kuli-banner.jpg" alt="រឿង គូលីកំណែន" className="block h-auto w-full" />
-        </button>
-      </div>
-
       {/* Translate box */}
       <div className="mx-4 mt-4 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
         <button
@@ -123,34 +108,8 @@ export function HomeScreen() {
         </button>
       </div>
 
-      {/* អក្សរសាស្ត្រ — stories from the library */}
-      {library.categories.map((category, index) => {
-        const stories = (library.stories as Story[]).filter((story) => story.category === index);
-        if (!stories.length) return null;
-        return (
-          <div key={category} className="mt-6">
-            <SectionTitle>
-              <span className="inline-flex items-center gap-2"><NoteIcon size={20} />{category}</span>
-            </SectionTitle>
-            <div className="mx-4 grid grid-cols-2 gap-3">
-              {stories.map((story) => (
-                <button
-                  key={story.id}
-                  onClick={() => setOpenStory(story)}
-                  className="tap flex min-h-[118px] flex-col justify-between rounded-2xl bg-white p-3.5 text-left shadow-card"
-                >
-                  <span className="grid h-9 w-9 place-items-center rounded-xl bg-TRA-50 text-TRA-600"><NoteIcon size={20} /></span>
-                  <span className="mt-3 block text-[15px] font-semibold leading-[1.7] text-ink-900">{story.title}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        );
-      })}
-
       {translateOpen && <Translator onClose={() => setTranslateOpen(false)} />}
       {dictOpen && <Dictionary onClose={() => setDictOpen(false)} />}
-      {openStory && <Reader key={openStory.id} story={openStory} onClose={() => setOpenStory(null)} />}
     </div>
   );
 }
