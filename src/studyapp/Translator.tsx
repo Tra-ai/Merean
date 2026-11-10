@@ -81,7 +81,7 @@ export default function Translator({ onClose }: { onClose: () => void }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[80] bg-[#b98b5e]" role="dialog" aria-label="បកប្រែ">
-      <div className="mx-auto flex h-full max-w-[430px] flex-col">
+      <div className="mx-auto flex h-full max-w-[720px] flex-col">
         <div className="flex items-center justify-between border-b border-black/10 bg-white/75 px-4 py-3 backdrop-blur-xl">
           <h1 className="text-[17px] font-semibold text-ink-900">🌐 បកប្រែ</h1>
           <button onClick={onClose} aria-label="បិទ" className="rounded-full px-3 py-1 text-[14px] font-medium text-TRA-600 active:bg-black/5">រួចរាល់</button>

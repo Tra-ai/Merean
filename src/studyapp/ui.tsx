@@ -53,31 +53,46 @@ export function Icon({ name, className, strokeWidth = 2 }: { name: string; class
 /* ---------- App chrome ---------- */
 
 export function TopBar({ onSearch, onBell }: { onSearch: () => void; onBell: () => void }) {
+  const { tab, switchTab } = useStore();
   return (
-    <div className="sticky top-0 z-30 border-b border-black/10 bg-white/75 backdrop-blur-xl backdrop-saturate-150">
-      <div className="flex items-center gap-2.5 px-4 py-2.5">
-        <img src={IMG.rylIcon} alt="TRA" className="h-9 w-9 rounded-[10px] shadow-sm" />
-        <div className="min-w-0 flex-1">
-          <div className="text-[15px] font-bold leading-tight tracking-wide text-ink-900">TRA APP</div>
-          <div className="text-[10.5px] leading-tight text-ink-400">អានដើម្បីឈប់ J+o</div>
-        </div>
-        <button onClick={onSearch} aria-label="ស្វែងរក" className="tap grid h-9 w-9 place-items-center rounded-full bg-TRA-50 text-TRA-700">
+    <header className="sticky top-0 z-30 border-b border-black/10 bg-white/85 backdrop-blur-xl backdrop-saturate-150">
+      <div className="mx-auto flex w-full max-w-[880px] items-center gap-2 px-4 py-2.5">
+        <button onClick={() => switchTab("home")} className="flex shrink-0 items-center gap-2.5" aria-label="TRA APP">
+          <img src={IMG.rylIcon} alt="" className="h-9 w-9 rounded-[10px] shadow-sm" />
+          <span className="hidden text-[16px] font-bold tracking-wide text-ink-900 sm:block">TRA APP</span>
+        </button>
+        <nav className="flex min-w-0 flex-1 items-center gap-1 pl-1 sm:pl-4" aria-label="ម៉ឺនុយ">
+          {TABS.map((t) => {
+            const active = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => switchTab(t.id)}
+                aria-current={active ? "page" : undefined}
+                className={cn("whitespace-nowrap rounded-full px-3 py-1.5 text-[14px] transition-colors", active ? "bg-TRA-50 font-semibold text-TRA-700" : "text-ink-500 hover:bg-black/5")}
+              >
+                {t.label}
+              </button>
+            );
+          })}
+        </nav>
+        <button onClick={onSearch} aria-label="ស្វែងរក" className="tap grid h-9 w-9 shrink-0 place-items-center rounded-full bg-TRA-50 text-TRA-700">
           <Icon name="search" className="h-[18px] w-[18px]" />
         </button>
-        <button onClick={onBell} aria-label="ជូនដំណឹង" className="tap relative grid h-9 w-9 place-items-center rounded-full bg-TRA-50 text-TRA-700">
+        <button onClick={onBell} aria-label="ជូនដំណឹង" className="tap relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-TRA-50 text-TRA-700">
           <Icon name="bell" className="h-[18px] w-[18px]" />
           <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-busr-500 ring-2 ring-white" />
         </button>
       </div>
-    </div>
+    </header>
   );
 }
 
 export function DetailHeader({ title, sub, right }: { title: string; sub?: string; right?: ReactNode }) {
   const { pop } = useStore();
   return (
-    <div className="sticky top-0 z-30 border-b border-black/10 bg-white/75 backdrop-blur-xl backdrop-saturate-150">
-      <div className="flex items-center gap-1.5 px-2 py-2">
+    <div className="sticky top-0 z-30 border-b border-black/10 bg-white/85 backdrop-blur-xl backdrop-saturate-150">
+      <div className="mx-auto flex w-full max-w-[880px] items-center gap-1.5 px-2 py-2">
         <button onClick={pop} aria-label="ត្រឡប់ក្រោយ" className="tap grid h-10 w-10 shrink-0 place-items-center rounded-full text-ink-700">
           <Icon name="back" className="h-5 w-5" strokeWidth={2.4} />
         </button>
@@ -120,7 +135,7 @@ export function TabBar() {
 export function ToastHost() {
   const { toasts } = useStore();
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-20 z-50 flex flex-col items-center gap-2 px-6">
+    <div className="pointer-events-none fixed inset-x-0 bottom-6 z-50 flex flex-col items-center gap-2 px-6">
       {toasts.map((t) => (
         <div key={t.id} className="animate-toast-in flex max-w-full items-center gap-2 rounded-full bg-char-800/95 py-2 pl-3 pr-4 text-[12.5px] text-white shadow-float">
           {t.icon ? <span className="text-[14px]">{t.icon}</span> : <Icon name="check" className="h-4 w-4 text-TRA-400" />}

@@ -51,7 +51,7 @@ export function HomeScreen() {
       {/* Greeting */}
       <div className="px-4 pt-3.5">
         <div className="text-[12px] text-ink-900/70">{greet}</div>
-        <h1 className="mt-0.5 text-[19px] font-bold leading-[1.7] text-ink-900">
+        <h1 className="mt-0.5 text-[19px] font-bold leading-[1.7] text-ink-900 md:text-[30px]">
           {s.user ? `សួស្តី ${s.user.name}! តោះអានថ្ងៃនេះ 📚` : "តោះចាប់ផ្តើមអានថ្ងៃនេះ 📚"}
         </h1>
       </div>
@@ -78,8 +78,9 @@ export function HomeScreen() {
         </div>
       )}
 
+      <div className="mx-4 mt-4 grid gap-3 md:grid-cols-2">
       {/* Translate box */}
-      <div className="mx-4 mt-4 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
+      <div className="overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
         <button
           onClick={() => setTranslateOpen(true)}
           className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-black/5"
@@ -94,7 +95,7 @@ export function HomeScreen() {
       </div>
 
       {/* Dictionary box */}
-      <div className="mx-4 mt-3 overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
+      <div className="overflow-hidden rounded-xl bg-white shadow-[0_0_0_0.5px_rgba(0,0,0,0.06)]">
         <button
           onClick={() => setDictOpen(true)}
           className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-black/5"
@@ -106,6 +107,8 @@ export function HomeScreen() {
           </span>
           <Icon name="right" className="h-4 w-4 shrink-0 text-[#c7c7cc]" strokeWidth={2.6} />
         </button>
+      </div>
+
       </div>
 
       {translateOpen && <Translator onClose={() => setTranslateOpen(false)} />}
