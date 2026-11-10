@@ -303,7 +303,7 @@ svg { flex-shrink: 0; }
 .reader-tabs button.active { color: #191919; font-weight: 500; border-bottom-color: var(--accent); }
 .reader-tabs button:focus-visible { outline-offset: -3px; }
 .reader-prose { padding-top: 16px; font-size: 16.8px; line-height: 1.6; font-weight: 400; overflow-wrap: break-word; animation: text-enter 150ms ease-out; }
-.reader-prose p { margin: 0 0 12px; }
+.reader-prose p { margin: 0 0 12px; white-space: pre-line; }
 .reader-prose strong, .reader-prose b { font-weight: 650; }
 .reader-prose h2, .reader-prose h3, .reader-prose h4 { font-size: 18px; font-weight: 600; margin: 18px 0 10px; }
 .reader-prose ul, .reader-prose ol { padding-left: 24px; margin-bottom: 14px; }
