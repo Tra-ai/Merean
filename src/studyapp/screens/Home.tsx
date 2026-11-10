@@ -73,6 +73,8 @@ export function HomeScreen() {
           </div>
         </div>
       )}
+
+      <div className="mt-10 text-center text-[11px] text-white/60">TRA APP · v35</div>
     </div>
   );
 }
