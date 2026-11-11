@@ -1,16 +1,30 @@
-import { useEffect, useState } from "react";
-import { IMG } from "../data";
+import { useEffect, useMemo, useState } from "react";
+import { BOOKS, IMG, SUBJECTS, UNIVERSITIES, fmt } from "../data";
+import type { Book } from "../data";
 import { useStore } from "../store";
-import { Icon, TopBar } from "../ui";
+import { TopBar } from "../ui";
 
 type InstallEvent = Event & {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
+function Spine({ book }: { book: Book }) {
+  if (book.art) {
+    return (
+      <>
+        <img src={book.art} alt="" loading="lazy" />
+        <span className="cap">{book.title}</span>
+      </>
+    );
+  }
+  return <>{book.title}</>;
+}
+
 export function HomeScreen() {
   const s = useStore();
   const [installEvent, setInstallEvent] = useState<InstallEvent | null>(null);
+
   useEffect(() => {
     const capture = (e: Event) => { e.preventDefault(); setInstallEvent(e as InstallEvent); };
     const installed = () => { setInstallEvent(null); s.dismissInstall(); s.toast("TRA APP ត្រូវបានដំឡើងរួចរាល់ ✓", "📲"); };
@@ -34,47 +48,91 @@ export function HomeScreen() {
   }
 
   const standalone = typeof window !== "undefined" && window.matchMedia?.("(display-mode: standalone)").matches;
-  const hour = new Date().getHours();
-  const greet = hour < 12 ? "អរុណសួស្តី ☀️" : hour < 17 ? "ទិវាសួស្តី 🌤️" : "សាយណ្ហសួស្តី 🌙";
+  const stack = useMemo(() => BOOKS.filter((b) => b.art).slice(0, 3), []);
+  const shelf = useMemo(() => [...BOOKS].sort((a, b) => b.views - a.views).slice(0, 8), []);
+
+  const openBook = (id: string) => { s.bumpView(`book:${id}`); s.push({ name: "book", id }); };
+
+  const contents = [
+    { label: "សៀវភៅ", desc: "អានតាមជំពូក ហើយចាប់បន្តពីកន្លែងដែលឈប់", n: BOOKS.length, unit: "ក្បាល", go: () => s.switchTab("books") },
+    { label: "វិញ្ញាសាបាក់ឌុប", desc: "វិញ្ញាសាចាស់ៗ និងសំណួរពហុជម្រើស", n: SUBJECTS.length, unit: "មុខវិជ្ជា", go: () => s.switchTab("exam") },
+    { label: "សាកលវិទ្យាល័យ", desc: "ជំនាញ ទីតាំង និងប្រភេទសាកល", n: UNIVERSITIES.length, unit: "សាកល", go: () => s.switchTab("uni") },
+    { label: "ចំណាំរបស់ខ្ញុំ", desc: "សៀវភៅដែលអ្នកបានរក្សាទុក", n: s.favorites.length, unit: "ក្បាល", go: () => s.push({ name: "favorites" }) },
+  ];
 
   return (
-    <div className="animate-fade-up pb-6">
+    <div className="sb-home">
       <TopBar
+        wide
         onSearch={() => s.push({ name: "search" })}
         onBell={() => s.toast("វិញ្ញាសាបាក់ឌុប ២០២៥ ថ្មីទើបបន្ថែម! 🎓", "🔔")}
       />
 
-      {/* Greeting */}
-      <div className="px-4 pt-3.5">
-        <div className="text-[12px] text-ink-900/70">{greet}</div>
-        <h1 className="mt-0.5 text-[19px] font-bold leading-[1.7] text-ink-900 md:text-[30px]">
-          {s.user ? `សួស្តី ${s.user.name}! តោះអានថ្ងៃនេះ 📚` : "តោះចាប់ផ្តើមអានថ្ងៃនេះ 📚"}
-        </h1>
-      </div>
-
-      {/* Install banner */}
-      {!s.installDismissed && !standalone && (
-        <div className="animate-fade-up mx-4 mt-3" style={{ animationDelay: "80ms" }}>
-          <div className="relative flex items-center gap-2.5 overflow-hidden rounded-xl border border-TRA-200 bg-gradient-to-r from-TRA-50 to-TRA-100 p-2.5">
-            <button
-              className="tap-img flex min-w-0 flex-1 items-center gap-2.5 text-left"
-              onClick={install}
-            >
-              <img src={IMG.rylIcon} alt="" className="h-9 w-9 rounded-lg shadow-sm" />
-              <span className="min-w-0">
-                <span className="block truncate text-[12px] font-semibold text-ink-900">ដំឡើង TRA APP លើទូរស័ព្ទ</span>
-                <span className="block text-[10.5px] text-ink-500">បើកលឿនជាងមុន · អានបានទោះគ្មានអ៊ីនធឺណិត</span>
-              </span>
-              <span className="ml-auto shrink-0 rounded-full bg-TRA-500 px-3 py-1.5 text-[10.5px] font-bold text-white shadow-sm">ដំឡើង</span>
-            </button>
-            <button aria-label="បិទ" onClick={s.dismissInstall} className="tap grid h-6 w-6 shrink-0 place-items-center rounded-full text-ink-400">
-              <Icon name="x" className="h-3.5 w-3.5" />
-            </button>
+      <div className="sb-wrap">
+        {!s.installDismissed && !standalone && (
+          <div className="sb-note">
+            <img src={IMG.rylIcon} alt="" />
+            <p><strong>ដំឡើង TRA APP លើទូរស័ព្ទ</strong>បើកលឿនពីអេក្រង់ដើម</p>
+            <button className="go" onClick={install}>ដំឡើង</button>
+            <button className="x" onClick={s.dismissInstall} aria-label="បិទ">×</button>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="mt-10 text-center text-[11px] text-white/60">TRA APP · v35</div>
+        <section className="sb-page">
+          <div className="sb-holes" aria-hidden />
+          <div className="sb-hero">
+            <div>
+              <h1>អានដើម្បីរីកចម្រើន</h1>
+              <p>សៀវភៅអេឡិចត្រូនិច វិញ្ញាសាបាក់ឌុប និងមគ្គុទ្ទេសក៍សាកលវិទ្យាល័យ នៅកន្លែងតែមួយ។</p>
+              <div className="sb-cta">
+                <button className="sb-btn main" onClick={() => s.switchTab("books")}>ចាប់ផ្តើមអាន</button>
+                <button className="sb-btn" onClick={() => s.switchTab("exam")}>ធ្វើវិញ្ញាសា</button>
+              </div>
+            </div>
+            <div className="sb-covers">
+              {stack.map((b) => (
+                <button key={b.id} className="sb-cover" onClick={() => openBook(b.id)} aria-label={b.title}>
+                  <img src={b.art} alt="" />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <ul className="sb-toc">
+            {contents.map((c) => (
+              <li key={c.label}>
+                <button className="sb-row" onClick={c.go}>
+                  <span className="l1">
+                    <span>{c.label}</span>
+                    <span className="dots" aria-hidden />
+                    <span className="n">{fmt(c.n)}<small>{c.unit}</small></span>
+                  </span>
+                  <span className="l2">{c.desc}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="sb-shelf">
+          <h2>សៀវភៅដែលគេអានច្រើនជាងគេ</h2>
+          <div className="sb-books">
+            {shelf.map((b) => (
+              <button
+                key={b.id}
+                className={b.art ? "sb-book" : "sb-book typo"}
+                style={b.art ? undefined : { background: b.typo!.bg, color: b.typo!.fg }}
+                onClick={() => openBook(b.id)}
+                aria-label={b.title}
+              >
+                <Spine book={b} />
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <footer className="sb-foot"><b>TRA APP</b> · Read to Grow · v36</footer>
+      </div>
     </div>
   );
 }

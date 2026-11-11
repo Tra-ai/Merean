@@ -5,6 +5,7 @@ import type { Book } from "./data";
 import { useStore } from "./store";
 import type { TabId } from "./store";
 import { cn } from "./utils/cn";
+import "./site.css";
 
 /* ---------- Icons ---------- */
 
@@ -52,36 +53,28 @@ export function Icon({ name, className, strokeWidth = 2 }: { name: string; class
 
 /* ---------- App chrome ---------- */
 
-export function TopBar({ onSearch, onBell }: { onSearch: () => void; onBell: () => void }) {
+export function TopBar({ onSearch, onBell, wide }: { onSearch: () => void; onBell: () => void; wide?: boolean }) {
   const { tab, switchTab } = useStore();
   return (
-    <header className="sticky top-0 z-30 border-b border-black/10 bg-white/85 backdrop-blur-xl backdrop-saturate-150">
-      <div className="mx-auto flex w-full max-w-[880px] items-center gap-2 px-4 py-2.5">
-        <button onClick={() => switchTab("home")} className="flex shrink-0 items-center gap-2.5" aria-label="TRA APP">
-          <img src={IMG.rylIcon} alt="" className="h-9 w-9 rounded-[10px] shadow-sm" />
-          <span className="hidden text-[16px] font-bold tracking-wide text-ink-900 sm:block">TRA APP</span>
+    <header className={cn("sb-top", wide && "wide")}>
+      <div className="sb-top-in">
+        <button className="sb-brand" onClick={() => switchTab("home")} aria-label="TRA APP">
+          <img src={IMG.rylIcon} alt="" />
+          <span>TRA APP</span>
         </button>
-        <nav className="flex min-w-0 flex-1 items-center gap-1 pl-1 sm:pl-4" aria-label="ម៉ឺនុយ">
-          {TABS.map((t) => {
-            const active = tab === t.id;
-            return (
-              <button
-                key={t.id}
-                onClick={() => switchTab(t.id)}
-                aria-current={active ? "page" : undefined}
-                className={cn("whitespace-nowrap rounded-full px-3 py-1.5 text-[14px] transition-colors", active ? "bg-TRA-50 font-semibold text-TRA-700" : "text-ink-500 hover:bg-black/5")}
-              >
-                {t.label}
-              </button>
-            );
-          })}
+        <nav className="sb-nav" aria-label="ម៉ឺនុយ">
+          {TABS.map((t) => (
+            <button key={t.id} onClick={() => switchTab(t.id)} aria-current={tab === t.id ? "page" : undefined}>
+              {t.label}
+            </button>
+          ))}
         </nav>
-        <button onClick={onSearch} aria-label="ស្វែងរក" className="tap grid h-9 w-9 shrink-0 place-items-center rounded-full bg-TRA-50 text-TRA-700">
-          <Icon name="search" className="h-[18px] w-[18px]" />
+        <button className="sb-ic" onClick={onSearch} aria-label="ស្វែងរក">
+          <Icon name="search" />
         </button>
-        <button onClick={onBell} aria-label="ជូនដំណឹង" className="tap relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-TRA-50 text-TRA-700">
-          <Icon name="bell" className="h-[18px] w-[18px]" />
-          <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-busr-500 ring-2 ring-white" />
+        <button className="sb-ic" onClick={onBell} aria-label="ជូនដំណឹង">
+          <Icon name="bell" />
+          <span className="dot" />
         </button>
       </div>
     </header>

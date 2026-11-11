@@ -35,6 +35,7 @@ function renderScreen(screen: Screen | null, tab: string) {
 function Shell() {
   const s = useStore();
   const isReader = s.screen?.name === "reader";
+  const isHome = !s.screen && s.tab === "home";
   const stackDepth = s.stacks[s.tab].length;
 
   // Scroll to top whenever the visible page changes
@@ -47,7 +48,7 @@ function Shell() {
       {isReader ? (
         <div className="h-dvh">{renderScreen(s.screen, s.tab)}</div>
       ) : (
-        <main className="mx-auto w-full max-w-[880px] pb-12">{renderScreen(s.screen, s.tab)}</main>
+        <main className={isHome ? "w-full" : "mx-auto w-full max-w-[880px] pb-12"}>{renderScreen(s.screen, s.tab)}</main>
       )}
       <ToastHost />
     </div>
